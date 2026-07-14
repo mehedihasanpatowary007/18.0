@@ -1,4 +1,4 @@
-# Website Product Cart Quantity Limit
+# Zencore Website Product Cart Quantity Limit
 
 Odoo 18 addon that limits how many units of a product a website customer can keep in the cart.
 
@@ -15,9 +15,9 @@ Odoo 18 addon that limits how many units of a product a website customer can kee
 
 ## Installation
 
-1. Copy `website_product_cart_limit` into your Odoo addons path.
+1. Copy `zencore_website_product_cart_limit` into your Odoo addons path.
 2. Update the Apps list.
-3. Install **Website Product Cart Quantity Limit**.
+3. Install **Zencore Website Product Cart Quantity Limit**.
 4. Open a product and set **Maximum Cart Quantity**.
 
 ## Notes

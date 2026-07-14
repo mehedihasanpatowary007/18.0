@@ -1,9 +1,10 @@
 {
-    "name": "Website Product Cart Quantity Limit",
-    "version": "18.0.1.0.0",
+    "name": "Zencore Website Product Cart Quantity Limit",
+    "version": "18.0.1.0.1",
     "category": "Website/Website",
     "summary": "Limit website cart quantity per product",
-    "author": "Codex",
+    "author": "Mehedi Hasan",
+    "website": "https://zencoreltd.com",
     "license": "LGPL-3",
     "depends": ["website_sale"],
     "data": [
@@ -12,8 +13,8 @@
     ],
     "assets": {
         "web.assets_frontend": [
-            "website_product_cart_limit/static/src/js/cart_limit.js",
-            "website_product_cart_limit/static/src/scss/cart_limit.scss",
+            "zencore_website_product_cart_limit/static/src/js/cart_limit.js",
+            "zencore_website_product_cart_limit/static/src/scss/cart_limit.scss",
         ],
     },
     "installable": True,
