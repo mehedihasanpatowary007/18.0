@@ -1,0 +1,16 @@
+.oe_website_sale {
+    .o_wcl_limit_reached,
+    .o_wcl_limit_reached.disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        pointer-events: auto !important;
+    }
+
+    .o_wcl_line_warning,
+    .o_wcl_product_limit_alert {
+        color: #d1242f;
+        border-color: #ffb3b8;
+        background-color: #fff5f5;
+        font-weight: 600;
+    }
+}
