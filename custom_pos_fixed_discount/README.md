@@ -17,6 +17,8 @@ This Odoo 18.0 addon adds fixed amount discounts to Point of Sale order lines wh
 - Adds `Fixed Disc` near `Disc.%` in the POS order backend form and POS order line list.
 - POS Sales Analysis `Total Discount` includes both percentage and fixed discounts.
 - POS Sales Analysis also has a separate `Fixed Discount` measure.
+- POS invoice journal entries allocate fixed discounts to the configured customer invoice discount account.
+- POS session closing journal entries allocate fixed discounts to the configured customer invoice discount account.
 
 ## Installation
 
@@ -28,6 +30,9 @@ This Odoo 18.0 addon adds fixed amount discounts to Point of Sale order lines wh
 
 When updating an existing installation, upgrade this module so Odoo rebuilds the
 `report.pos.order` SQL view used by POS Sales Analysis.
+
+The accounting discount allocation also requires a module upgrade because the
+module adds `pos_fixed_discount_amount` on invoice journal items.
 
 ## Usage
 

@@ -1,6 +1,6 @@
 {
     "name": "POS Fixed Line Discount",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "category": "Sales/Point of Sale",
     "summary": "Add fixed amount discounts on POS order lines",
     "author": "Custom",

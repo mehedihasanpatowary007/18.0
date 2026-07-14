@@ -37,6 +37,13 @@ class PosOrderLine(models.Model):
         amount = max(self.fixed_discount_amount or 0.0, 0.0)
         return amount * abs(quantity / self.qty)
 
+    def _get_fixed_discount_allocation_amount_currency(self, quantity=None):
+        self.ensure_one()
+        amount = self._get_fixed_discount_for_quantity(quantity or self.qty)
+        if not amount:
+            return 0.0
+        return (-1.0 if self.qty * self.price_unit >= 0.0 else 1.0) * amount
+
     def _get_fixed_discount_adjusted_price_unit(self, quantity):
         self.ensure_one()
         price_unit = self.price_unit
