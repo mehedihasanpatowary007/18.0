@@ -1,4 +1,4 @@
-# Zencore POS Fixed Line Discount
+# POS Fixed Line Discount
 
 This Odoo 18.0 addon adds fixed amount discounts to Point of Sale order lines while keeping the native percentage discount flow.
 
@@ -20,10 +20,10 @@ This Odoo 18.0 addon adds fixed amount discounts to Point of Sale order lines wh
 
 ## Installation
 
-1. Copy `zencore_custom_pos_fixed_discount` into your Odoo custom addons path.
+1. Copy `custom_pos_fixed_discount` into your Odoo custom addons path.
 2. Restart Odoo.
 3. Update the Apps list.
-4. Install **Zencore POS Fixed Line Discount**.
+4. Install **POS Fixed Line Discount**.
 5. Open a POS session and use the `%` button on a selected order line.
 
 When updating an existing installation, upgrade this module so Odoo rebuilds the

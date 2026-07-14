@@ -1,6 +1,6 @@
 {
     "name": "Website Product Cart Quantity Limit",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.0.1",
     "category": "Website/Website",
     "summary": "Limit website cart quantity per product",
     "author": "Codex",

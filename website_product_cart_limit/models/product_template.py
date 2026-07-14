@@ -1,5 +1,4 @@
 from odoo import fields, models
-from odoo.http import request
 
 
 class ProductTemplate(models.Model):
@@ -17,9 +16,11 @@ class ProductTemplate(models.Model):
     # Current website cart quantity for this product template.
     def _get_website_cart_qty(self):
         self.ensure_one()
+        from odoo.http import request
+
         try:
             order = request.website.sale_get_order()
-        except RuntimeError:
+        except (AttributeError, RuntimeError):
             return 0
         if not order:
             return 0
