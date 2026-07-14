@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_zencore_apps_dashboard" model="ir.ui.view">
+        <field name="name">res.users.form.zencore.apps.dashboard</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']/group" position="after">
+                <group string="Dashboard Customizer" name="zencore_dashboard_customizer">
+                    <field name="zencore_dashboard_show_customizer_icon"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_preferences_form_zencore_apps_dashboard" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.zencore.apps.dashboard</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences_page']/group[@name='signature']" position="after">
+                <group string="Dashboard Customizer" name="zencore_dashboard_customizer">
+                    <field name="zencore_dashboard_show_customizer_icon" readonly="0"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

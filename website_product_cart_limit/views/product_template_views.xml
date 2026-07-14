@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_cart_limit" model="ir.ui.view">
+        <field name="name">product.template.form.website.cart.limit</field>
+        <field name="model">product.template</field>
+        <field name="priority">90</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']//group[@name='extra_info']/field[@name='is_published']" position="after">
+                <!-- Show the cart limit only for products published on the website. -->
+                <separator string="Maximum Cart Quantity Limits" colspan="2" invisible="not is_published"/>
+                <field name="website_max_cart_qty" invisible="not is_published"/>
+                <div class="text-muted" colspan="2" invisible="not is_published">
+                    <i class="fa fa-info-circle me-1"/>
+                    The maximum number of units a customer can add to their cart for this product.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

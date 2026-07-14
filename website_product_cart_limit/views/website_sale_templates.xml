@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_quantity_limit_notice" inherit_id="website_sale.product" name="Product Quantity Limit Notice">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <div
+                t-if="product.website_max_cart_qty"
+                class="o_wcl_product_limit_alert alert alert-danger d-none mt-3"
+                role="alert"
+                t-att-data-limit="product.website_max_cart_qty">
+                <i class="fa fa-ban me-1"/>
+                <span>
+                    Maximum Limit Reached: You can buy a total of
+                    <strong t-out="product.website_max_cart_qty"/>
+                    units only.
+                </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="cart_lines_limit_data" inherit_id="website_sale.cart_lines" name="Cart Quantity Limit Data">
+        <xpath expr="//div[@name='website_sale_cart_line_quantity']//input[hasclass('js_quantity')]" position="attributes">
+            <attribute name="t-att-data-max-cart-qty">line.product_id.product_tmpl_id.website_max_cart_qty or 0</attribute>
+            <attribute name="t-att-data-limit-warning">line._website_cart_limit_warning()</attribute>
+        </xpath>
+        <xpath expr="//div[@name='website_sale_cart_line_quantity']//input[hasclass('js_quantity')]/following-sibling::a[hasclass('js_add_cart_json')]" position="attributes">
+            <attribute name="t-attf-class">
+                js_add_cart_json d-inline-block float_left btn btn-link border-start-0 #{line._website_cart_limit_reached() and 'o_wcl_limit_reached disabled' or ''}
+            </attribute>
+            <attribute name="t-att-data-limit-warning">line._website_cart_limit_warning()</attribute>
+        </xpath>
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="after">
+            <div
+                t-if="line.product_id.product_tmpl_id.website_max_cart_qty and line.product_uom_qty &gt;= line.product_id.product_tmpl_id.website_max_cart_qty"
+                class="o_wcl_line_warning alert alert-danger py-1 px-2 mt-1 mb-0"
+                role="alert">
+                <i class="fa fa-ban me-1"/>
+                <span t-out="line._website_cart_limit_warning()"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

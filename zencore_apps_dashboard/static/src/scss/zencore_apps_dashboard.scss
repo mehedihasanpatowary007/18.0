@@ -1,0 +1,585 @@
+.zencore_dashboard_root {
+    --zencore-dashboard-icon-size: 70px;
+    --zencore-dashboard-text-size: 100%;
+    --zencore-dashboard-radius: 96%;
+    --zencore-dashboard-bg-opacity: 0.34;
+    --zencore-dashboard-bg-image: none;
+    --zencore-dashboard-card-gap: 16px;
+    --zencore-dashboard-card-half-gap: 8px;
+    position: relative;
+    min-height: 100%;
+    isolation: isolate;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image: var(--zencore-dashboard-bg-image);
+        background-size: cover;
+        background-position: center;
+        opacity: var(--zencore-dashboard-bg-opacity);
+        pointer-events: none;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: rgba(245, 247, 250, 0.55);
+        pointer-events: none;
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .o_app,
+    .o_menuitem,
+    a[role="menuitem"],
+    button[role="menuitem"] {
+        box-sizing: border-box;
+        font-size: var(--zencore-dashboard-text-size) !important;
+        margin-left: var(--zencore-dashboard-card-half-gap) !important;
+        margin-right: var(--zencore-dashboard-card-half-gap) !important;
+        transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    &.o_apps,
+    &.o_application_switcher,
+    .o_apps,
+    .o_home_menu_scrollable,
+    .o_application_switcher {
+        gap: var(--zencore-dashboard-card-gap) !important;
+        row-gap: var(--zencore-dashboard-card-gap) !important;
+        column-gap: var(--zencore-dashboard-card-gap) !important;
+    }
+
+    .o_app:hover,
+    .o_menuitem:hover,
+    a[role="menuitem"]:hover,
+    button[role="menuitem"]:hover {
+        transform: translateY(-2px);
+    }
+
+    .o_app_icon,
+    .o_app .o_app_icon,
+    .o_app img,
+    .o_menuitem img,
+    a[role="menuitem"] img {
+        width: var(--zencore-dashboard-icon-size) !important;
+        height: var(--zencore-dashboard-icon-size) !important;
+        border-radius: var(--zencore-dashboard-radius) !important;
+        object-fit: cover;
+    }
+
+    .o_app_name,
+    .o_app_caption,
+    .o_caption,
+    .o_menuitem_caption,
+    .o_home_menu_app_name,
+    .o_app span,
+    .o_app div:not(.o_app_icon),
+    .o_menuitem span,
+    a[role="menuitem"] span,
+    button[role="menuitem"] span {
+        font-size: inherit !important;
+        line-height: 1.25;
+    }
+}
+
+.zencore_dashboard_fit_width {
+    .o_apps,
+    .o_home_menu_scrollable,
+    .o_application_switcher {
+        max-width: none !important;
+        width: 100% !important;
+    }
+}
+
+.zencore_dashboard_glass {
+    .o_app,
+    .o_menuitem,
+    a[role="menuitem"],
+    button[role="menuitem"] {
+        margin: var(--zencore-dashboard-card-half-gap) !important;
+        padding: 12px 14px !important;
+        border: 1px solid rgba(255, 255, 255, 0.48) !important;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.24) !important;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+        -webkit-backdrop-filter: blur(14px) saturate(140%);
+        backdrop-filter: blur(14px) saturate(140%);
+    }
+
+    .zencore_dashboard_search {
+        background: rgba(58, 55, 61, 0.32);
+        -webkit-backdrop-filter: blur(14px) saturate(140%);
+        backdrop-filter: blur(14px) saturate(140%);
+    }
+}
+
+.zencore_dashboard_no_animation {
+    .o_app,
+    .o_menuitem,
+    a[role="menuitem"],
+    button[role="menuitem"] {
+        transition: none !important;
+    }
+
+    .o_app:hover,
+    .o_menuitem:hover,
+    a[role="menuitem"]:hover,
+    button[role="menuitem"]:hover {
+        transform: none !important;
+    }
+}
+
+.zencore_dashboard_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: calc(100vw - 32px);
+    max-width: 520px;
+    margin: 28px auto 40px;
+    color: #172033;
+    text-align: center;
+}
+
+.zencore_dashboard_header_hidden {
+    display: none;
+}
+
+.zencore_dashboard_time {
+    font-size: 72px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-shadow: 0 10px 24px rgba(16, 24, 40, 0.18);
+}
+
+.zencore_dashboard_greeting {
+    font-size: 16px;
+}
+
+.zencore_dashboard_search_wrap {
+    position: relative;
+    width: 100%;
+}
+
+.zencore_dashboard_search {
+    width: 100%;
+    height: 52px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    padding: 0 30px;
+    background: rgba(58, 55, 61, 0.42);
+    color: #fff;
+    box-shadow: 0 14px 28px rgba(16, 24, 40, 0.12);
+    outline: 0;
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.78);
+    }
+}
+
+.zencore_dashboard_hidden {
+    display: none !important;
+}
+
+.zencore_custom_app_icon {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.o_menu_systray .zencore_dashboard_customizer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 4px;
+    margin-right: 4px;
+    background: transparent;
+    color: currentColor;
+
+    &:hover,
+    &:focus {
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    &[hidden] {
+        display: none !important;
+    }
+}
+
+.zencore_dashboard_modal_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background:
+        linear-gradient(135deg, rgba(13, 22, 38, 0.72), rgba(54, 67, 88, 0.62)),
+        rgba(17, 24, 39, 0.54);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    &[hidden] {
+        display: none !important;
+    }
+}
+
+.zencore_dashboard_modal {
+    display: flex;
+    flex-direction: column;
+    width: calc(100vw - 32px);
+    max-width: 520px;
+    max-height: calc(100vh - 56px);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.44);
+    border-radius: 18px;
+    background: #f7f8fb;
+    color: #1f2937;
+    box-shadow:
+        0 30px 90px rgba(6, 16, 34, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.74);
+}
+
+.zencore_dashboard_modal_header,
+.zencore_dashboard_modal_footer {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+}
+
+.zencore_dashboard_modal_header {
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(213, 219, 229, 0.92);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(238, 244, 249, 0.86));
+}
+
+.zencore_dashboard_modal_eyebrow {
+    display: block;
+    margin-bottom: 3px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.zencore_dashboard_modal h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.zencore_dashboard_modal_footer {
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid rgba(213, 219, 229, 0.92);
+    background: rgba(255, 255, 255, 0.86);
+}
+
+.zencore_dashboard_close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: #edf1f5;
+    color: #667085;
+    font-size: 15px;
+    line-height: 1;
+
+    &:hover,
+    &:focus {
+        background: #e3e9ef;
+        color: #1f2937;
+    }
+}
+
+.zencore_dashboard_modal_body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 18px;
+}
+
+.zencore_setting_card {
+    padding: 16px;
+    border: 1px solid rgba(213, 219, 229, 0.94);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 28px rgba(18, 28, 45, 0.06);
+
+    + .zencore_setting_card {
+        margin-top: 14px;
+    }
+}
+
+.zencore_setting_card_title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 800;
+
+    i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: #e8f0ef;
+        color: #1f5c4a;
+    }
+}
+
+.zencore_setting_control {
+    + .zencore_setting_control {
+        margin-top: 14px;
+    }
+
+    label {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    strong {
+        color: #111827;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    input[type="range"] {
+        width: 100%;
+        height: 6px;
+        accent-color: #1f5c4a;
+        cursor: pointer;
+    }
+}
+
+.zencore_dashboard_range_scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    color: #7b8492;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.zencore_setting_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.zencore_dashboard_checkbox {
+    display: grid !important;
+    grid-template-columns: 38px 1fr;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: 0;
+    padding: 9px 10px;
+    border: 1px solid #e5e9ef;
+    border-radius: 12px;
+    background: #fbfcfe;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+
+    input {
+        width: 36px;
+        height: 20px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #1f5c4a;
+    }
+}
+
+.zencore_upload_row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.zencore_icon_editor select {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #ccd6df;
+    border-radius: 11px;
+    padding: 0 12px;
+    background: #fff;
+    color: #253142;
+    font-weight: 700;
+}
+
+.zencore_icon_editor_hint {
+    margin-top: 10px;
+    color: #667085;
+    font-size: 12px;
+}
+
+.zencore_upload_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid #ccd6df;
+    border-radius: 11px;
+    background: #fff;
+    color: #253142;
+    cursor: pointer;
+    font-weight: 800;
+
+    input {
+        display: none;
+    }
+
+    &:hover {
+        border-color: #91a4b6;
+        background: #f8fafc;
+    }
+}
+
+.zencore_dashboard_clear_image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #f1b5bd;
+    border-radius: 11px;
+    background: #fff4f5;
+    color: #c83245;
+
+    &:hover,
+    &:focus {
+        background: #ffe9ec;
+        color: #9f2434;
+    }
+}
+
+.zencore_reset_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccd6df;
+    border-radius: 11px;
+    background: #fff;
+    color: #475467;
+
+    &:hover,
+    &:focus {
+        border-color: #91a4b6;
+        background: #f8fafc;
+        color: #111827;
+    }
+}
+
+.zencore_dashboard_preview {
+    width: 100%;
+    height: 96px;
+    margin-top: 12px;
+    overflow: hidden;
+    border: 1px solid #d7dee8;
+    border-radius: 12px;
+    background-color: #eef2f6;
+    background-size: cover;
+    background-position: center;
+}
+
+.zencore_footer_actions {
+    display: flex;
+    gap: 10px;
+}
+
+.zencore_dashboard_save,
+.zencore_dashboard_cancel,
+.zencore_dashboard_reset {
+    min-height: 40px;
+    border: 0;
+    border-radius: 11px;
+    padding: 0 16px;
+    font-weight: 800;
+}
+
+.zencore_dashboard_save {
+    background: #1f5c4a;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(31, 92, 74, 0.22);
+
+    &:hover,
+    &:focus {
+        background: #184a3c;
+    }
+}
+
+.zencore_dashboard_cancel {
+    background: #eef2f6;
+    color: #344054;
+
+    &:hover,
+    &:focus {
+        background: #e2e8f0;
+    }
+}
+
+.zencore_dashboard_reset {
+    background: transparent;
+    color: #bf3144;
+
+    &:hover,
+    &:focus {
+        background: #fff0f2;
+    }
+}
+
+@media (max-width: 767px) {
+    .zencore_dashboard_time {
+        font-size: 42px;
+    }
+
+    .zencore_setting_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .zencore_dashboard_modal_footer {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .zencore_footer_actions {
+        flex-direction: column-reverse;
+    }
+}
