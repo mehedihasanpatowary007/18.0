@@ -132,18 +132,20 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
 
     // Odoo updates cart widgets asynchronously, so refresh more than once.
     _scheduleProductAddRecord(addQty) {
+        const limit = this._getProductLimit();
+        const targetQty = Math.min(this._getProductCartQty() + addQty, limit);
         for (const delay of [0, 100, 350, 800]) {
-            setTimeout(() => this._recordProductAdd(addQty), delay);
+            setTimeout(() => this._recordProductAdd(targetQty), delay);
         }
     },
 
     // Keep the page state updated after a valid add without requiring reload.
-    _recordProductAdd(addQty) {
+    _recordProductAdd(targetQty) {
         const limit = this._getProductLimit();
-        if (!limit || !addQty) {
+        if (!limit || !targetQty) {
             return;
         }
-        this._setProductCartQty(Math.min(this._getProductCartQty() + addQty, limit));
+        this._setProductCartQty(targetQty);
         this._refreshProductQuantityState();
         if (this._getProductCartQty() >= limit) {
             this._removeAddToCartSuccessNotification();

@@ -1,9 +1,10 @@
 {
     "name": "Website Product Cart Quantity Limit",
-    "version": "18.0.1.0.3",
+    "version": "18.0.1.0.4",
     "category": "Website/Website",
     "summary": "Limit website cart quantity per product",
-    "author": "Codex",
+    "author": "Mehedi Hasan",
+    "website": "https://www.zencoreltd.com",
     "license": "LGPL-3",
     "depends": ["website_sale"],
     "data": [
