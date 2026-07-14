@@ -6,7 +6,8 @@
                 t-if="product.website_max_cart_qty"
                 class="o_wcl_product_limit_alert alert alert-danger d-none mt-3"
                 role="alert"
-                t-att-data-limit="product.website_max_cart_qty">
+                t-att-data-limit="product.website_max_cart_qty"
+                t-att-data-cart-qty="product._get_website_cart_qty()">
                 <i class="fa fa-ban me-1"/>
                 <span>
                     Maximum Limit Reached: You can buy a total of

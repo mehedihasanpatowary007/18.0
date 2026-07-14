@@ -2,6 +2,7 @@
     .o_wcl_limit_reached {
         opacity: 0.55;
         cursor: not-allowed;
+        pointer-events: auto;
     }
 
     .o_wcl_line_warning,
