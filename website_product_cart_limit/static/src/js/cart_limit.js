@@ -12,14 +12,14 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     },
 
     start() {
-        this._boundCaptureAddToCart = this._onCaptureAddToCart.bind(this);
-        this.el.addEventListener("click", this._boundCaptureAddToCart, true);
+        this._boundCaptureLimitClick = this._onCaptureLimitClick.bind(this);
+        this.el.addEventListener("click", this._boundCaptureLimitClick, true);
         this._super(...arguments);
         this._refreshProductQuantityState();
     },
 
     destroy() {
-        this.el.removeEventListener("click", this._boundCaptureAddToCart, true);
+        this.el.removeEventListener("click", this._boundCaptureLimitClick, true);
         return this._super(...arguments);
     },
 
@@ -61,6 +61,13 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         return alert ? parseInt(alert.dataset.cartQty || "0", 10) : 0;
     },
 
+    _setProductCartQty(quantity) {
+        const alert = this._getProductLimitAlert();
+        if (alert) {
+            alert.dataset.cartQty = Math.max(quantity, 0).toString();
+        }
+    },
+
     _getProductWarning(limit, cartQty = this._getProductCartQty()) {
         if (cartQty) {
             return `Maximum Limit Reached: You already have ${cartQty} in your cart. You can buy a total of ${limit} units only.`;
@@ -76,15 +83,30 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         return document.querySelectorAll("#add_to_cart, .o_we_buy_now, .a-submit");
     },
 
-    // Stop Odoo's add-to-cart flow when the cart already reached the limit.
-    _onCaptureAddToCart(ev) {
-        const button = ev.target.closest("#add_to_cart, .o_we_buy_now, .a-submit");
-        if (!button || !this.el.contains(button) || !this._shouldBlockProductAdd()) {
+    // Stop Odoo's own click handlers before they can add or show success.
+    _onCaptureLimitClick(ev) {
+        const blockedElement = ev.target.closest(".o_wcl_limit_reached");
+        if (blockedElement && this.el.contains(blockedElement)) {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            this._showWarning(blockedElement.dataset.limitWarning || this._getProductWarning(this._getProductLimit()));
             return;
         }
-        ev.preventDefault();
-        ev.stopImmediatePropagation();
-        this._showWarning(button.dataset.limitWarning || this._getProductWarning(this._getProductLimit()));
+
+        const button = ev.target.closest("#add_to_cart, .o_we_buy_now, .a-submit");
+        if (!button || !this.el.contains(button) || !this._getProductLimit()) {
+            return;
+        }
+
+        if (this._shouldBlockProductAdd()) {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            this._showWarning(button.dataset.limitWarning || this._getProductWarning(this._getProductLimit()));
+            return;
+        }
+
+        const addQty = this._getProductAddQty();
+        setTimeout(() => this._recordProductAdd(addQty), 0);
     },
 
     _shouldBlockProductAdd() {
@@ -93,9 +115,23 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
             return false;
         }
         const cartQty = this._getProductCartQty();
-        const quantityInput = this._getProductQuantityInput();
-        const addQty = parseInt(quantityInput?.value || "1", 10) || 1;
+        const addQty = this._getProductAddQty();
         return cartQty >= limit || cartQty + addQty > limit;
+    },
+
+    _getProductAddQty() {
+        const quantityInput = this._getProductQuantityInput();
+        return parseInt(quantityInput?.value || "1", 10) || 1;
+    },
+
+    // Keep the page state updated after a valid add without requiring reload.
+    _recordProductAdd(addQty) {
+        const limit = this._getProductLimit();
+        if (!limit || !addQty) {
+            return;
+        }
+        this._setProductCartQty(Math.min(this._getProductCartQty() + addQty, limit));
+        this._refreshProductQuantityState();
     },
 
     _refreshProductQuantityState() {
@@ -114,6 +150,7 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
             const plusBlocked = remainingQty <= 0 || limitedQuantity >= remainingQty;
             plusButton.classList.toggle("o_wcl_limit_reached", plusBlocked);
             plusButton.classList.toggle("disabled", plusBlocked);
+            plusButton.setAttribute("aria-disabled", plusBlocked ? "true" : "false");
             plusButton.dataset.limitWarning = warning;
         }
         quantityInput.value = limitedQuantity;
