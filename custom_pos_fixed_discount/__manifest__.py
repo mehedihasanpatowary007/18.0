@@ -3,7 +3,8 @@
     "version": "18.0.1.1.0",
     "category": "Sales/Point of Sale",
     "summary": "Add fixed amount discounts on POS order lines",
-    "author": "Custom",
+    "author": "Mehedi Hasan",
+    "website": "https://www.zencoreltd.com",
     "license": "LGPL-3",
     "depends": ["point_of_sale"],
     "data": [
