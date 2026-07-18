@@ -1,0 +1,80 @@
+<odoo>
+    <data>
+
+        <!-- FORM VIEW -->
+        <record id="view_form_sms_template" model="ir.ui.view">
+            <field name="name">betopia.sms.template.view.form</field>
+            <field name="model">betopia.sms.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="SMS Template">
+                    <sheet>
+                        <header>
+                            <button name="action_draft" string="Draft" type="object"/>
+                            <button name="action_posted" string="Post" type="object" class="btn-primary"/>
+                            <button name="action_cancel" string="Cancel" type="object" class="btn-danger"/>
+
+                            <field name="state" widget="statusbar"/>
+                        </header>
+
+                        <div class="oe_button_box" name="button_box" >
+                            <button type="object" name="action_open_messages" class="oe_stat_button" icon="fa-comments">
+                                <field name="messages_count" string="Messages" widget="statinfo"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" required="1" placeholder='e.g. "Send Order Document"'  readonly="state != 'draft'" />
+                            </h1>
+                        </div>
+
+                        <group>
+                            <field name="sms_account"  readonly="state != 'draft'" />
+
+                        </group>
+
+                        <group>
+                            <group columns="2">
+                                <!-- <field name="model_id"/>
+                                <field name="phone_field" widget="DynamicModelFieldSelectorChar" options="{'model': 'model'}"/> -->
+                                <field name="footer_text"  readonly="state != 'draft'" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Body">
+                                 <field name="body" widget="text"
+                                placeholder="Hello {{1}}, here is your order with the reference {{2}} ..."
+                                readonly="state != 'draft'" required="1"/>
+                            </page>
+                        </notebook>
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- list VIEW -->
+        <record id="view_list_sms_template" model="ir.ui.view">
+            <field name="name">betopia.sms.template.view.</field>
+            <field name="model">betopia.sms.template</field>
+            <field name="arch" type="xml">
+                <list string="SMS Templates">
+                    <field name="name"/>
+                    <field name="sms_account"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ACTION -->
+        <record id="action_sms_templates" model="ir.actions.act_window">
+            <field name="name">SMS Templates</field>
+            <field name="res_model">betopia.sms.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="type">ir.actions.act_window</field>
+        </record>
+
+    </data>
+</odoo>

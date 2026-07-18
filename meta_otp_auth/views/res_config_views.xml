@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+  <data>
+    <record id="otp_auth_view_inhreits_meta_sms_config_view" model="ir.ui.view">
+      <field name="name">otp.auth.res.config.settings.form</field>
+      <field name="model">res.config.settings</field>
+      <field name="inherit_id" ref="base.res_config_settings_view_form" />
+      <field name="arch" type="xml">
+
+        <block name="integration" position="before">
+          <block id="auth_otp_config" name="OTP" title="One Time Passwords">
+            <setting id="otp_auth_configuration_login"
+              title="Login OTP">
+              <field name="signin_auth" />
+            </setting>
+
+            <setting id="otp_auth_configuration_signup"
+              title="Signup OTP">
+              <field name="signup_auth" />
+            </setting>
+
+            <setting id="otp_auth_configuration_otp_provider"
+              title="OTP SMS Provider">
+
+
+              <div class="row mt8">
+                <label class="col-lg-6" for="otp_sms_provider" />
+                <field name="otp_sms_provider" />
+              </div>
+
+              <div class="row mt8" invisible="otp_sms_provider!='adn'">
+                <label class="col-lg-6" for="api_end_point" />
+                <field name="api_end_point" required="otp_sms_provider =='adn'" />
+              </div>
+              <div class="row mt8" invisible="otp_sms_provider!='adn'">
+                <label class="col-lg-6" for="api_key" />
+                <field name="api_key" required="otp_sms_provider =='adn'" />
+              </div>
+              <div class="row mt8" invisible="otp_sms_provider!='adn'">
+                <label class="col-lg-6" for="api_secret_key" />
+                <field name="api_secret_key" required="otp_sms_provider =='adn'" />
+              </div>
+            </setting>
+
+            <setting id="otp_auth_configuration_otp_configuration"
+              title="OTP Configuration">
+              <div class="row mt8">
+                <label class="col-lg-3" for="otp_time_limit" />
+                <field name="otp_time_limit" />
+              </div>
+              <!-- <div class="row mt8">
+                                <label class="col-lg-3" for="otp_type" />
+                                <field name="otp_type" />
+                            </div> -->
+              <div class="row mt8">
+                <label class="col-lg-6" for="otp_content" />
+                <field name="otp_content"
+                  placeholder="e.g. Hello, Your secret OTP is &lt;otp&gt; " />
+              </div>
+            </setting>
+          </block>
+        </block>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Email Template for Courier Assignment -->
+    <record id="email_template_courier_assignment" model="mail.template">
+        <field name="name">Delivery Courier Assignment</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Your Order {{ object.origin or object.name }} is Out for Delivery</field>
+        <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0px auto; max-width: 600px; background-color: #FFFFFF; border: 1px solid #e1e1e1;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 20px; background-color: #875A7B; color: #FFFFFF;">
+                            <h2 style="margin: 0px; color: #FFFFFF;">
+                                <i class="fa fa-truck" style="margin-right: 10px;"></i>
+                                Your Order is Out for Delivery
+                            </h2>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 20px;">
+                            <p style="margin-top: 0px;">Hello <strong>{{ object.partner_id.name }}</strong>,</p>
+
+                            <p>Great news! Your order has been assigned to our courier and is on its way to you.</p>
+
+                            <!-- Order Details -->
+                            <table width="100%" cellpadding="8" style="margin: 20px 0px; border: 1px solid #e1e1e1; border-collapse: collapse;">
+                                <tr style="background-color: #f5f5f5;">
+                                    <td colspan="2" style="border: 1px solid #e1e1e1; padding: 10px;">
+                                        <strong>Delivery Information</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px; width: 40%;"><strong>Delivery Order:</strong></td>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;">{{ object.name }}</td>
+                                </tr>
+                                <tr t-if="object.origin">
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;"><strong>Source Document:</strong></td>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;">{{ object.origin }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;"><strong>Scheduled Date:</strong></td>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;">
+                                        {{ format_datetime(object.scheduled_date, dt_format='medium', tz=object.partner_id.tz or 'UTC') if object.scheduled_date else 'N/A' }}
+                                    </td>
+                                </tr>
+                                <tr t-if="object.carrier_id">
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;"><strong>Delivery Method:</strong></td>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;">{{ object.carrier_id.name }}</td>
+                                </tr>
+                            </table>
+
+                            <!-- Delivery Address -->
+                            <table width="100%" cellpadding="8" style="margin: 20px 0px; border: 1px solid #e1e1e1; border-collapse: collapse;">
+                                <tr style="background-color: #f5f5f5;">
+                                    <td style="border: 1px solid #e1e1e1; padding: 10px;">
+                                        <strong>Delivery Address</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;">
+                                        <div>{{ object.partner_id.name }}</div>
+                                        <div t-if="object.partner_id.street">{{ object.partner_id.street }}</div>
+                                        <div t-if="object.partner_id.street2">{{ object.partner_id.street2 }}</div>
+                                        <div>
+                                            <span t-if="object.partner_id.city">{{ object.partner_id.city }}</span>
+                                            <span t-if="object.partner_id.state_id">, {{ object.partner_id.state_id.name }}</span>
+                                            <span t-if="object.partner_id.zip"> {{ object.partner_id.zip }}</span>
+                                        </div>
+                                        <div t-if="object.partner_id.country_id">{{ object.partner_id.country_id.name }}</div>
+                                        <div t-if="object.partner_id.phone">Phone: {{ object.partner_id.phone }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Products -->
+                            <table width="100%" cellpadding="8" style="margin: 20px 0px; border: 1px solid #e1e1e1; border-collapse: collapse;">
+                                <tr style="background-color: #f5f5f5;">
+                                    <td colspan="2" style="border: 1px solid #e1e1e1; padding: 10px;">
+                                        <strong>Products Being Delivered</strong>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #f9f9f9;">
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px;"><strong>Product</strong></td>
+                                    <td style="border: 1px solid #e1e1e1; padding: 8px; text-align: right;"><strong>Quantity</strong></td>
+                                </tr>
+                                <t t-foreach="object.move_ids" t-as="move">
+                                    <tr>
+                                        <td style="border: 1px solid #e1e1e1; padding: 8px;">{{ move.product_id.name }}</td>
+                                        <td style="border: 1px solid #e1e1e1; padding: 8px; text-align: right;">
+                                            {{ move.product_uom_qty }} {{ move.product_uom.name }}
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+
+                            <p t-if="object.courier_notes" style="margin-top: 20px;">
+                                <strong>Special Instructions:</strong><br/>
+                                {{ object.courier_notes }}
+                            </p>
+
+                            <p style="margin-top: 20px;">
+                                If you have any questions about your delivery, please don't hesitate to contact us.
+                            </p>
+
+                            <p style="margin-bottom: 0px;">
+                                Thank you for your business!<br/>
+                                <strong>{{ object.company_id.name }}</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 15px; background-color: #f5f5f5; text-align: center; font-size: 12px; color: #666666;">
+                            <p style="margin: 0px;">
+                                <t t-if="object.company_id.phone">
+                                    Phone: {{ object.company_id.phone }}<br/>
+                                </t>
+                                <t t-if="object.company_id.email">
+                                    Email: {{ object.company_id.email }}<br/>
+                                </t>
+                                <t t-if="object.company_id.website">
+                                    Website: <a t-att-href="object.company_id.website" style="color: #875A7B;">{{ object.company_id.website }}</a>
+                                </t>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+
+</odoo>

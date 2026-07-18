@@ -1,0 +1,283 @@
+<odoo>
+    <!-- Custom Homepage -->
+    <template id="custom_homepage" inherit_id="website.homepage" name="Custom Homepage">
+        <xpath expr="//div[hasclass('oe_structure')]" position="after">
+            <section class="py-3">
+                <div class="container-fluid">
+                    <div class="categories-carousel-container position-relative">
+                        <div class="categories-carousel-wrapper">
+                            <div class="categories-carousel d-flex" id="categoriesCarousel">
+                                <!-- Fetch all categories (parent and child) ordered by sequence, limit to exactly 8 -->
+                                <t t-set="categories" t-value="request.env['product.public.category'].sudo().search([], order='sequence, name', limit=8)"/>
+                                <t t-foreach="categories" t-as="category">
+                                    <div class="category-slide flex-shrink-0">
+                                        <a t-attf-href="/shop/category/#{category.id}" class="text-decoration-none">
+                                            <div class="category-card-large">
+                                                <div class="position-relative overflow-hidden category-image-container">
+                                                    <t t-if="category.image_1920">
+                                                        <img t-attf-src="/web/image/product.public.category/#{category.id}/image_1920"
+                                                            t-att-alt="category.name"
+                                                            class="w-100 h-100"
+                                                            loading="lazy"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                                            <i class="fa fa-tag fa-3x text-muted"></i>
+                                                        </div>
+                                                    </t>
+                                                    <div class="category-overlay position-absolute bottom-0 start-0 end-0 p-2">
+                                                        <h5 class="mb-0 category-title" t-out="category.name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <!-- Carousel navigation buttons -->
+                        <button class="carousel-nav carousel-nav-prev position-absolute top-50 start-0 translate-middle-y"
+                                onclick="slideCategories('prev')" type="button">
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav carousel-nav-next position-absolute top-50 end-0 translate-middle-y"
+                                onclick="slideCategories('next')" type="button">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <div class="oe_structure"></div>
+        </xpath>
+    </template>
+
+    <!-- Homepage Styles and Carousel Script -->
+    <template id="homepage_styles" inherit_id="website.layout" name="Homepage Styles">
+        <xpath expr="//head" position="inside">
+            <style>
+                /* ---------------------- General Carousel Styles ---------------------- */
+                .categories-carousel-container { 
+                    overflow: hidden; 
+                    padding: 0 10%; /* Add padding equally to both sides to center */
+                    position: relative; 
+                }
+                .categories-carousel-wrapper { overflow: hidden; }
+                .categories-carousel { 
+                    display: flex; 
+                    transition: transform 0.5s ease; 
+                    will-change: transform; 
+                }
+
+                .category-slide { 
+                    flex-shrink: 0; 
+                    margin: 0 10px; /* Space between cards */
+                    transition: transform 0.2s ease; 
+                    width: calc(25% - 20px); /* 4 items per slide on desktop */
+                }
+
+                .category-card-large { 
+                    border-radius: 8px; 
+                    overflow: hidden; 
+                    background-color: transparent; 
+                    cursor: pointer; 
+                    transition: transform 0.2s ease; 
+                }
+
+                .category-card-large:hover { 
+                    transform: scale(1.02); 
+                }
+
+                .category-image-container { 
+                    position: relative; 
+                    height: 320px; 
+                }
+
+                .category-card-large img { 
+                    width: 100%; 
+                    height: 100%; 
+                    object-fit: cover; 
+                    transition: transform 0.3s ease; 
+                }
+
+                .category-card-large:hover img { 
+                    transform: scale(1.03); 
+                }
+
+                .category-overlay {
+                    background: rgba(255, 255, 255, 0.6);
+                    backdrop-filter: blur(6px);
+                    -webkit-backdrop-filter: blur(6px);
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    padding: 8px;
+                }
+
+                .category-title {
+                    text-align: center;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: #000; 
+                }
+
+
+
+                .carousel-nav { 
+                    width: 40px; 
+                    height: 40px; 
+                    border-radius: 50%; 
+                    background: rgba(255,255,255,0.7); 
+                    border: none; 
+                    color: #333; 
+                    font-size: 16px; 
+                    transition: transform 0.3s ease; 
+                    z-index: 10;
+                }
+
+                .carousel-nav:hover { 
+                    transform: scale(1.1); 
+                    background: rgba(255,255,255,0.9);
+                }
+
+                section.py-3 { 
+                    background: transparent !important; 
+                }
+
+                /* ---------------------- Responsive Widths ---------------------- */
+                /* Desktop: 4 cards per slide */
+                @media (min-width: 1200px) {
+                    .category-slide { 
+                        width: calc(25% - 20px); /* 4 items per slide */
+                    }
+                    .category-image-container { height: 320px; }
+                }
+
+                /* Tablet landscape: 3 cards per slide */
+                @media (min-width: 992px) and (max-width: 1199px) {
+                    .category-slide { 
+                        width: calc(33.333% - 20px); /* 3 items per slide */
+                    }
+                    .category-image-container { height: 300px; }
+                }
+
+                /* Tablet portrait / small desktop: 2 cards per slide */
+                @media (min-width: 768px) and (max-width: 991px) {
+                    .category-slide { 
+                        width: calc(50% - 20px); /* 2 items per slide */
+                    }
+                    .category-image-container { height: 250px; }
+                }
+
+                /* Mobile: 2 cards per slide */
+                @media (max-width: 767px) {
+                    .categories-carousel-container { padding: 0 8px; }
+                    .category-slide { 
+                        width: calc(50% - 10px); /* 2 items per slide */
+                        margin: 0 5px 16px 5px; 
+                    }
+                    .category-image-container { height: 220px; }
+                    .category-title { font-size: 1.1rem; }
+                }
+
+                @media (max-width: 575px) {
+                    .categories-carousel-container { padding: 0 4px; }
+                    .category-slide { 
+                        width: calc(50% - 8px); /* 2 items per slide */
+                        margin: 0 4px 12px 4px; 
+                    }
+                    .category-image-container { height: 200px; }
+                    .category-title { font-size: 1rem; }
+                }
+            </style>
+
+            <script type="text/javascript">
+                <![CDATA[
+                document.addEventListener('DOMContentLoaded', function() {
+                    let currentSlide = 0;
+                    const carousel = document.getElementById('categoriesCarousel');
+                    if (!carousel) return;
+
+                    const slides = carousel.querySelectorAll('.category-slide');
+                    const totalSlides = slides.length;
+
+                    function getSlidesPerView() {
+                        const width = window.innerWidth;
+                        if (width >= 1200) return 4;  // Desktop - 4 per slide
+                        if (width >= 992) return 3;   // Tablet landscape - 3 per slide  
+                        if (width >= 768) return 2;   // Tablet portrait - 2 per slide
+                        return 2;                      // Mobile - 2 per slide
+                    }
+
+                    function updateCarousel() {
+                        const slidesPerView = getSlidesPerView();
+                        const containerWidth = carousel.parentElement.offsetWidth;
+                        const slideWidth = containerWidth / slidesPerView;
+                        
+                        // Calculate maximum slides we can show (total slides = 8)
+                        const maxSlide = Math.max(0, totalSlides - slidesPerView);
+                        currentSlide = Math.min(currentSlide, maxSlide);
+                        
+                        carousel.style.transform = 'translateX(' + (-currentSlide * slideWidth) + 'px)';
+
+                        const prevBtn = document.querySelector('.carousel-nav-prev');
+                        const nextBtn = document.querySelector('.carousel-nav-next');
+
+                        if (prevBtn && nextBtn) {
+                            // Show/hide navigation buttons based on available slides
+                            if (totalSlides <= slidesPerView) {
+                                // Hide navigation if all slides fit in view
+                                prevBtn.style.display = 'none';
+                                nextBtn.style.display = 'none';
+                            } else {
+                                prevBtn.style.display = 'block';
+                                nextBtn.style.display = 'block';
+                                
+                                prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+                                prevBtn.disabled = currentSlide === 0;
+                                nextBtn.style.opacity = currentSlide >= maxSlide ? '0.5' : '1';
+                                nextBtn.disabled = currentSlide >= maxSlide;
+                            }
+                        }
+                    }
+
+                    window.slideCategories = function(direction) {
+                        const slidesPerView = getSlidesPerView();
+                        const maxSlide = Math.max(0, totalSlides - slidesPerView);
+                        
+                        if (direction === 'next' && currentSlide < maxSlide) {
+                            currentSlide = Math.min(currentSlide + slidesPerView, maxSlide);
+                        }
+                        if (direction === 'prev' && currentSlide > 0) {
+                            currentSlide = Math.max(currentSlide - slidesPerView, 0);
+                        }
+                        updateCarousel();
+                    };
+
+                    updateCarousel();
+                    window.addEventListener('resize', updateCarousel);
+
+                    // Touch/swipe support for mobile
+                    let startX = 0, isDragging = false;
+                    carousel.addEventListener('touchstart', e => { 
+                        startX = e.touches[0].clientX; 
+                        isDragging = true; 
+                    });
+                    carousel.addEventListener('touchmove', e => { 
+                        if(!isDragging) return; 
+                        e.preventDefault(); 
+                    });
+                    carousel.addEventListener('touchend', e => {
+                        if(!isDragging) return; 
+                        isDragging = false;
+                        const diffX = startX - e.changedTouches[0].clientX;
+                        if(Math.abs(diffX) > 50) {
+                            slideCategories(diffX > 0 ? 'next' : 'prev');
+                        }
+                    });
+                });
+                ]]>
+            </script>
+        </xpath>
+    </template>
+</odoo>

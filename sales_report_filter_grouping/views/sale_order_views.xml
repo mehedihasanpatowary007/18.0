@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+##############################################################################
+#
+#    Author: Soaeb Abdullah
+#    Company: BD calling IT Limited
+#    Maintainer: Soaeb Abdullah
+#    Version: 17.0.1.0.0
+#    Website: https://soaeb.odoo.com/
+#
+##############################################################################
+-->
+<odoo>
+    <!-- Inherit Sale Order Form View -->
+    <record id="view_order_form_inherit_report_filter" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.report.filter</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add new fields in Other Information tab -->
+            <xpath expr="//notebook/page[@name='other_information']" position="inside">
+                <group string="Reporting &amp; Status Information" name="report_status_info">
+                    <group name="report_filters">
+                        <field name="pos_config_id"/>
+                        <field name="report_category"/>
+                        <field name="priority_level"/>
+                        <field name="sales_region"/>
+                        <field name="customer_segment" readonly="1"/>
+                    </group>
+                    <group name="status_tracking">
+                        <field name="vape_status" readonly="1" widget="badge" decoration-success="vape_status == 'done'" decoration-info="vape_status == 'send_to_courier'" decoration-warning="vape_status == 'sales_order'" decoration-muted="vape_status == 'quotation'"/>
+                        <field name="overall_status" readonly="1" widget="badge" decoration-success="overall_status == 'completed'" decoration-warning="overall_status in ['pending_payment', 'pending_delivery', 'partial_delivery']" decoration-danger="overall_status == 'overdue'" decoration-info="overall_status == 'in_progress'"/>
+                        <field name="payment_status" readonly="1"/>
+                        <field name="delivery_status" readonly="1"/>
+                        <field name="order_progress" widget="progressbar" readonly="1"/>
+                        <field name="order_age" readonly="1"/>
+                        <field name="days_to_confirm" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Tree View -->
+    <record id="view_order_tree_inherit_report_filter" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.report.filter</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add new columns -->
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="vape_status" optional="show" widget="badge" decoration-success="vape_status == 'done'" decoration-info="vape_status == 'send_to_courier'" decoration-warning="vape_status == 'sales_order'" decoration-muted="vape_status == 'quotation'"/>
+                <field name="overall_status" optional="hide" widget="badge" decoration-success="overall_status == 'completed'" decoration-warning="overall_status in ['pending_payment', 'pending_delivery', 'partial_delivery']" decoration-danger="overall_status == 'overdue'" decoration-info="overall_status == 'in_progress'"/>
+                <field name="report_category" optional="hide"/>
+                <field name="priority_level" optional="show"/>
+                <field name="sales_region" optional="hide"/>
+                <field name="customer_segment" optional="show"/>
+                <field name="payment_status" optional="show"/>
+                <field name="order_progress" widget="progressbar" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Search View -->
+    <record id="view_sales_order_filter_inherit_report" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.report.filter</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <!-- Add new search filters -->
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <separator/>
+                <filter string="Quotation" name="vape_quotation"
+                        domain="[('vape_status', '=', 'quotation')]"/>
+                <filter string="Sales Order" name="vape_sales_order"
+                        domain="[('vape_status', '=', 'sales_order')]"/>
+                <filter string="Send to Courier" name="vape_send_to_courier"
+                        domain="[('vape_status', '=', 'send_to_courier')]"/>
+                <filter string="Done (Delivered)" name="vape_done"
+                        domain="[('vape_status', '=', 'done')]"/>
+                <separator/>
+                <filter string="Completed Orders" name="completed"
+                        domain="[('overall_status', '=', 'completed')]"/>
+                <filter string="In Progress" name="in_progress"
+                        domain="[('overall_status', '=', 'in_progress')]"/>
+                <filter string="Pending Payment" name="overall_pending_payment"
+                        domain="[('overall_status', '=', 'pending_payment')]"/>
+                <filter string="Pending Delivery" name="pending_delivery"
+                        domain="[('overall_status', '=', 'pending_delivery')]"/>
+                <filter string="Overdue" name="overdue"
+                        domain="[('overall_status', '=', 'overdue')]"/>
+                <separator/>
+                <filter string="High Priority" name="high_priority"
+                        domain="[('priority_level', '=', 'high')]"/>
+                <filter string="Urgent Priority" name="urgent_priority"
+                        domain="[('priority_level', '=', 'urgent')]"/>
+                <separator/>
+                <filter string="Payment Pending" name="payment_pending"
+                        domain="[('payment_status', '=', 'pending')]"/>
+                <filter string="Payment Overdue" name="payment_overdue"
+                        domain="[('payment_status', '=', 'overdue')]"/>
+                <separator/>
+                <filter string="Not Shipped" name="not_shipped"
+                        domain="[('delivery_status', '=', 'not_shipped')]"/>
+                <filter string="Delivered" name="delivered"
+                        domain="[('delivery_status', '=', 'delivered')]"/>
+            </xpath>
+
+            <!-- Add group by options -->
+            <xpath expr="//filter[@name='salesperson']" position="after">
+                <separator/>
+                <filter string="Vape Status" name="group_vape_status"
+                        context="{'group_by': 'vape_status'}"/>
+                <filter string="Overall Status" name="group_overall_status"
+                        context="{'group_by': 'overall_status'}"/>
+                <filter string="Point of Sale" name="group_pos_config"
+                        context="{'group_by': 'pos_config_id'}"/>
+                <filter string="Report Category" name="group_report_category"
+                        context="{'group_by': 'report_category'}"/>
+                <filter string="Priority Level" name="group_priority"
+                        context="{'group_by': 'priority_level'}"/>
+                <filter string="Sales Region" name="group_region"
+                        context="{'group_by': 'sales_region'}"/>
+                <filter string="Customer Segment" name="group_customer_segment"
+                        context="{'group_by': 'customer_segment'}"/>
+                <filter string="Payment Status" name="group_payment_status"
+                        context="{'group_by': 'payment_status'}"/>
+                <filter string="Delivery Status" name="group_delivery_status"
+                        context="{'group_by': 'delivery_status'}"/>
+            </xpath>
+
+            <!-- Add search fields -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="vape_status"/>
+                <field name="overall_status"/>
+                <field name="pos_config_id"/>
+                <field name="report_category"/>
+                <field name="sales_region"/>
+                <field name="customer_segment"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Line Tree View -->
+    <record id="view_order_line_tree_inherit_status" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.inherit.status</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_subtotal']" position="after">
+                <field name="line_status" optional="show"/>
+                <field name="fulfillment_progress" widget="progressbar" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

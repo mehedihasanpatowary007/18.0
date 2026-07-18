@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="betopia_sms.list">
+      <field name="name">betopia_sms list</field>
+      <field name="model">betopia_sms.betopia_sms</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="betopia_sms.action_window">
+      <field name="name">betopia_sms window</field>
+      <field name="res_model">betopia_sms.betopia_sms</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="betopia_sms.action_server">
+      <field name="name">betopia_sms server</field>
+      <field name="model_id" ref="model_betopia_sms_betopia_sms"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="betopia_sms" id="betopia_sms.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="betopia_sms.menu_1" parent="betopia_sms.menu_root"/>
+    <menuitem name="Menu 2" id="betopia_sms.menu_2" parent="betopia_sms.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="betopia_sms.menu_1_list" parent="betopia_sms.menu_1"
+              action="betopia_sms.action_window"/>
+    <menuitem name="Server to list" id="betopia_sms" parent="betopia_sms.menu_2"
+              action="betopia_sms.action_server"/>
+-->
+  </data>
+</odoo>

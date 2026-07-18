@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t  t-inherit="sale.QuantityButtons" t-inherit-mode="extension">
+        <xpath expr="//div[@name='quantity_buttons_wrapper']//input[@name='sale_quantity']" position="replace">
+            <t t-if="props.display_product_qty_limits">
+                <input
+                class="form-control quantity text-center"
+                name="sale_quantity"
+                type="number"
+                t-att-value="props.quantity"
+                t-on-change="setQuantity"
+                disabled=""/>
+            </t>
+            <t t-else="">
+                <input
+                class="form-control quantity text-center"
+                name="sale_quantity"
+                type="number"
+                t-att-value="props.quantity"
+                t-on-change="setQuantity"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

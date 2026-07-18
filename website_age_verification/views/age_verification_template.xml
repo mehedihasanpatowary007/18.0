@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="age_verification_config" name="Age Verification Config" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+
+            <!-- Basic config parameters -->
+            <t t-set="age_title" t-value="request.env['ir.config_parameter'].sudo().get_param('age.title', 'AGE VERIFICATION')"/>
+            <t t-set="age_message" t-value="request.env['ir.config_parameter'].sudo().get_param('age.message', 'The products available on this website are age-restricted and intended for adults of legal smoking age only.')"/>
+            <t t-set="age_message_sub" t-value="request.env['ir.config_parameter'].sudo().get_param('age.message_sub', 'By entering our website...')"/>
+            <t t-set="age_fallback" t-value="request.env['ir.config_parameter'].sudo().get_param('age.fallback_url', 'https://www.google.com')"/>
+
+            <!-- New simplified colors -->
+            <t t-set="age_title_bg" t-value="request.env['ir.config_parameter'].sudo().get_param('age.title_bg', '#4da3ff')"/>
+            <t t-set="age_main_bg" t-value="request.env['ir.config_parameter'].sudo().get_param('age.main_bg', '#2b2b2b')"/>
+            <t t-set="age_yes_bg" t-value="request.env['ir.config_parameter'].sudo().get_param('age.yes_bg', '#27ae60')"/>
+            <t t-set="age_no_bg" t-value="request.env['ir.config_parameter'].sudo().get_param('age.no_bg', '#c0392b')"/>
+            <t t-set="age_text_color" t-value="request.env['ir.config_parameter'].sudo().get_param('age.text_color', '#ffffff')"/>
+
+            <!-- Initialize logo variables -->
+            <t t-set="age_logo_base64" t-value="''"/>
+            <t t-set="age_logo_url" t-value="''"/>
+
+            <!-- Get logo attachment ID -->
+            <t t-set="logo_attachment_id" t-value="request.env['ir.config_parameter'].sudo().get_param('age.logo.attachment_id', False)"/>
+
+            <!-- Process logo if attachment exists -->
+            <t t-if="logo_attachment_id and logo_attachment_id != 'False'">
+                <t t-try="">
+                    <t t-set="attachment" t-value="request.env['ir.attachment'].sudo().browse(int(logo_attachment_id))"/>
+                    <t t-if="attachment.exists()">
+                        <t t-if="attachment.datas">
+                            <!-- Store base64 data -->
+                            <t t-set="age_logo_base64" t-value="attachment.datas"/>
+                            <!-- Build URL -->
+                            <t t-set="age_logo_url" t-value="'/web/content/%s' % attachment.id"/>
+                        </t>
+                    </t>
+                    <t t-except="">
+                        <!-- Silently fail if attachment not found -->
+                    </t>
+                </t>
+            </t>
+
+            <script type="text/javascript">
+                window.ageVerificationConfig = {
+                    title: "<t t-esc='age_title'/>",
+                    message: "<t t-esc='age_message'/>",
+                    message_sub: "<t t-esc='age_message_sub'/>",
+                    fallback_url: "<t t-esc='age_fallback'/>",
+                    title_bg: "<t t-esc='age_title_bg'/>",
+                    main_bg: "<t t-esc='age_main_bg'/>",
+                    yes_bg: "<t t-esc='age_yes_bg'/>",
+                    no_bg: "<t t-esc='age_no_bg'/>",
+                    text_color: "<t t-esc='age_text_color'/>",
+                    logo: "<t t-esc='age_logo_base64'/>",
+                    logo_url: "<t t-esc='age_logo_url'/>"
+                };
+                console.log("Age verification config loaded:", {
+                    logoLength: window.ageVerificationConfig.logo.length,
+                    logoUrl: window.ageVerificationConfig.logo_url,
+                    colors: {
+                        title_bg: window.ageVerificationConfig.title_bg,
+                        main_bg: window.ageVerificationConfig.main_bg
+                    }
+                });
+            </script>
+
+        </xpath>
+    </template>
+</odoo>

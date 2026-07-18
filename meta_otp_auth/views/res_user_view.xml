@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="action_user_form" model="ir.ui.view">
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]//group" position="before">
+                    <label for="mobile" string="Mobile Number" />
+                    <h2>
+                        <field name="mobile" />
+                    </h2>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- User Tree View -->
+               <record id="meta_res_user_tree" model="ir.ui.view">
+                   <field name="name">meta.res_user.tree</field>
+                   <field name="model">res.users</field>
+                   <field name="inherit_id" ref="base.view_users_tree"/>
+                   <field name="arch" type="xml">
+                       <field name="login" position="after">
+                           <field name="mobile"/>
+                       </field>
+                   </field>
+               </record>
+
+        <!-- User Search View -->
+               <record id="view_users_search" model="ir.ui.view">
+                   <field name="name">res.users.search</field>
+                   <field name="model">res.users</field>
+                   <field name="inherit_id" ref="base.view_users_search"/>
+                   <field name="arch" type="xml">
+                       <xpath expr="//search" position="inside">
+                           <field name="mobile" filter_domain="[('mobile','ilike',self)]"/>
+                       </xpath>
+                   </field>
+               </record>
+
+
+    </data>
+</odoo>

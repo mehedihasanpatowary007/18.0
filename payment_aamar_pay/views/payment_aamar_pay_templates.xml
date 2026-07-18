@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- AamarPay Redirect Form -->
+    <template id="aamarpay_redirect_form" name="AamarPay Redirect Form">
+        <form t-att-action="api_url" method="post" id="aamarpay_redirect" target="_self">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <!-- Mandatory -->
+            <input type="hidden" name="store_id" t-att-value="store_id"/>
+            <input type="hidden" name="tran_id" t-att-value="tran_id"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="currency" t-att-value="currency"/>
+            <input type="hidden" name="signature_key" t-att-value="signature_key"/>
+            <input type="hidden" name="desc" t-att-value="desc"/>
+
+            <!-- Customer Info -->
+            <input type="hidden" name="cus_name" t-att-value="cus_name"/>
+            <input type="hidden" name="cus_email" t-att-value="cus_email"/>
+            <input type="hidden" name="cus_phone" t-att-value="cus_phone"/>
+            <input type="hidden" name="cus_add1" t-att-value="cus_add1"/>
+            <input type="hidden" name="cus_add2" t-att-value="cus_add2"/>
+            <input type="hidden" name="cus_city" t-att-value="cus_city"/>
+            <input type="hidden" name="cus_state" t-att-value="cus_state"/>
+            <input type="hidden" name="cus_postcode" t-att-value="cus_postcode"/>
+            <input type="hidden" name="cus_country" t-att-value="cus_country"/>
+
+            <!-- Redirect URLs -->
+            <input type="hidden" name="success_url" t-att-value="success_url"/>
+            <input type="hidden" name="fail_url" t-att-value="fail_url"/>
+            <input type="hidden" name="cancel_url" t-att-value="cancel_url"/>
+
+            <!-- Button fallback (in case auto-submit fails) -->
+            <button type="submit" class="btn btn-primary">Proceed to AamarPay</button>
+        </form>
+
+        <!-- Auto-submit -->
+        <script>
+            document.getElementById("aamarpay_redirect").submit();
+        </script>
+    </template>
+
+
+</odoo>

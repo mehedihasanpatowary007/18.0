@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Server Action to Assign Default POS to Sale Orders -->
+    <record id="action_assign_pos_to_orders" model="ir.actions.server">
+        <field name="name">Assign POS to Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Get the first available POS config
+pos_config = env['pos.config'].search([], limit=1)
+
+if pos_config:
+    # Assign to selected orders or all orders without POS
+    if records:
+        # Update selected orders
+        orders_to_update = records.filtered(lambda r: not r.pos_config_id)
+        orders_to_update.write({'pos_config_id': pos_config.id})
+        raise UserError(f"✅ Assigned '{pos_config.name}' to {len(orders_to_update)} orders!")
+    else:
+        # Update all orders without POS
+        all_orders = env['sale.order'].search([('pos_config_id', '=', False)])
+        all_orders.write({'pos_config_id': pos_config.id})
+        raise UserError(f"✅ Assigned '{pos_config.name}' to {len(all_orders)} orders!")
+else:
+    raise UserError("❌ No POS configuration found. Please create a POS config first.")
+]]></field>
+    </record>
+</odoo>

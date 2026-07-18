@@ -1,0 +1,85 @@
+/* popup.scss - relevant excerpts */
+
+.age-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.age-popup-box {
+  width: 680px;
+  max-width: calc(100% - 40px);
+  background: var(--popup-main-bg, #2b2b2b);
+  color: var(--popup-text, #ffffff);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border-radius: 2px;
+  overflow: hidden;
+
+  h2 {
+    margin: 0;
+    padding: 18px 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--popup-text, #ffffff);
+    background: var(--popup-title-bg, #4da3ff);
+  }
+
+  .age-popup-content {
+    padding: 32px;
+    text-align: center;
+  }
+
+  .age-popup-logo img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    display: inline-block;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    background: transparent;
+  }
+
+  .message-main {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--popup-text, #ffffff);
+  }
+
+  .message-sub {
+    font-size: 13px;
+    color: var(--popup-text, #ffffff);
+    opacity: 0.9;
+  }
+
+  .age-popup-buttons {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .age-btn-yes {
+    background: var(--popup-yes-bg, #27ae60);
+    color: var(--popup-text, #ffffff);
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+
+  .age-btn-no {
+    background: var(--popup-no-bg, transparent);
+    color: var(--popup-text, #ffffff);
+    border: 2px solid var(--popup-no-bg, #c0392b);
+    padding: 10px 22px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+}

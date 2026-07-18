@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t  t-inherit="sale.ProductList" t-inherit-mode="extension">
+        <xpath expr="//tbody[@class='border-top-0']//tr//Product" position="replace">
+                <t t-log="this.props.quantity"/>
+                <Product t-props="product" optional="this.props.areProductsOptional" 
+                        display_product_qty_limits = "this.props.display_product_qty_limits"
+                        minimum_product_quantity = "this.props.minimum_product_quantity"
+                        maximum_product_quantity = "this.props.maximum_product_quantity"
+                        product_quantity_multipler = "this.props.product_quantity_multipler"
+                        />
+        </xpath>
+    </t>
+</templates>

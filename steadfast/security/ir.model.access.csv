@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_betopia_steadfast,access.betopia.steadfast,model_betopia_steadfast,base.group_user,1,1,1,1
+access_betopia_steadfast_account,betopia.steadfast.account,model_betopia_steadfast_account,base.group_user,1,1,1,1
+access_betopia_steadfast_history,betopia.steadfast.history,model_betopia_steadfast_history,,1,1,1,1
+access_steadfast_tracking_user,steadfast.tracking.user,model_betopia_steadfast_tracking,,1,1,1,1
+access_steadfast_tracking_line_user,Steadfast Tracking Line User,model_betopia_steadfast_tracking_line,,1,1,1,1
+access_steadfast_pricing_user,steadfast_pricing_user,model_betopia_steadfast_pricing,,1,1,1,1
