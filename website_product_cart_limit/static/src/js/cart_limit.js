@@ -3,6 +3,16 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
+const originalShowCartNotification = wSaleUtils.showCartNotification;
+
+// Hide the success cart widget when the server rejected the add by cart limit.
+wSaleUtils.showCartNotification = function (callService, props = {}, options = {}) {
+    if (props.warning?.includes("Maximum Limit Reached")) {
+        props = { ...props, lines: undefined };
+    }
+    return originalShowCartNotification(callService, props, options);
+};
+
 publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     selector: ".oe_website_sale",
     events: {
