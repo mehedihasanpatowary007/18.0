@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_meta_otp_auth,access_meta_otp_auth,model_meta_otp_auth,,1,1,1,1
+access_send_otp,access_send_otp,model_send_otp,,1,1,1,
