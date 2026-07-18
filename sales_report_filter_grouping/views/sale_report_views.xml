@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+##############################################################################
+#
+#    Author: Soaeb Abdullah
+#    Company: BD calling IT Limited
+#    Maintainer: Soaeb Abdullah
+#    Version: 17.0.1.0.0
+#    Website: https://soaeb.odoo.com/
+#
+##############################################################################
+-->
+<odoo>
+    <!-- Inherit Sale Report Search View (Sales → Reporting → Sales) -->
+    <record id="view_sale_report_search_inherit_vape_status" model="ir.ui.view">
+        <field name="name">sale.report.search.vape.status</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <!-- Add Point of Sale search field first -->
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="pos_name" string="Point of Sale" filter_domain="[('pos_name', 'ilike', self)]"/>
+            </xpath>
+
+            <!-- Add Vape Status search field -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="vape_status" string="Vape Status"/>
+            </xpath>
+
+            <!-- Add Point of Sale and Vape Status filters -->
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <!-- Point of Sale Filters -->
+                <filter string="Has Point of Sale" name="filter_has_pos"
+                        domain="[('pos_name', '!=', False)]"/>
+                <filter string="No Point of Sale" name="filter_no_pos"
+                        domain="[('pos_name', '=', False)]"/>
+                <separator/>
+                <!-- Vape Status Filters -->
+                <filter string="Quotation" name="vape_quotation"
+                        domain="[('vape_status', '=', 'quotation')]"/>
+                <filter string="Sales Order" name="vape_sales_order"
+                        domain="[('vape_status', '=', 'sales_order')]"/>
+                <filter string="Send to Courier" name="vape_send_to_courier"
+                        domain="[('vape_status', '=', 'send_to_courier')]"/>
+                <filter string="Done (Delivered)" name="vape_done"
+                        domain="[('vape_status', '=', 'done')]"/>
+
+                <!-- Add Group By Point of Sale and Vape Status -->
+                <group expand="0" string="Group By">
+                    <filter string="Point of Sale"
+                            name="group_by_pos_name"
+                            context="{'group_by': 'pos_name'}"/>
+                    <filter string="Vape Status"
+                            name="group_by_vape_status"
+                            context="{'group_by': 'vape_status'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

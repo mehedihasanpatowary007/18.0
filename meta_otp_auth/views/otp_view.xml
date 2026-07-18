@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_meta_otp_list" model="ir.ui.view">
+        <field name="name">meta.otp.auth.list</field>
+        <field name="model">meta.otp.auth</field>
+        <field name="arch" type="xml">
+            <list string="OTP Records">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="otp"/>
+                <field name="expire_time"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_meta_otp_form" model="ir.ui.view">
+        <field name="name">meta.otp.auth.form</field>
+        <field name="model">meta.otp.auth</field>
+        <field name="arch" type="xml">
+            <form string="OTP Record">
+                <group>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="otp"/>
+                    <field name="expire_time"/>
+                    <field name="company_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_meta_otp" model="ir.actions.act_window">
+        <field name="name">OTP Records</field>
+        <field name="res_model">meta.otp.auth</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_meta_otp_list"/>
+    </record>
+
+    <menuitem id="menu_meta_otp_root" parent="base.menu_custom" name="OTP Management" sequence="1" groups="base.group_no_one" />
+
+    <menuitem id="menu_meta_otp" name="OTP Records" parent="menu_meta_otp_root" action="action_meta_otp" sequence="10"/>
+
+</odoo>

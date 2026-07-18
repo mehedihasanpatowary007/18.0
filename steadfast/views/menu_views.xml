@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Root Menu -->
+        <menuitem id="menu_steadfast_root"
+                  name="Steadfast Courier"
+                  sequence="10"/>
+
+        <!-- Configuration Parent Menu -->
+        <menuitem id="menu_steadfast_config"
+                  name="Configuration"
+                  parent="menu_steadfast_root"
+                  sequence="20"/>
+
+        <!-- Action to Open Settings -->
+        <record id="action_steadfast_config_settings" model="ir.actions.act_window">
+            <field name="name">Steadfast Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- It's good practice to pass module context for settings -->
+            <field name="context">{'module': 'steadfast'}</field>
+        </record>
+
+        <!-- Menu Item for Settings -->
+        <menuitem id="menu_steadfast_settings"
+                  name="Settings"
+                  parent="menu_steadfast_config"
+                  action="action_steadfast_config_settings"
+                  sequence="30"/>
+
+    </data>
+</odoo>

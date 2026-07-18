@@ -1,0 +1,49 @@
+<odoo>
+    <!-- Action to open menu -->
+    <record id="action_otp_sms_account" model="ir.actions.act_window">
+        <field name="name">OTP SMS Accounts</field>
+        <field name="res_model">otp.sms.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_otp_sms_root"
+              name="OTP SMS"
+              sequence="10"/>
+
+    <menuitem id="menu_otp_sms_account"
+              name="SMS Accounts"
+              parent="menu_otp_sms_root"
+              action="action_otp_sms_account"
+              sequence="20"/>
+
+    <!-- Tree View -->
+    <record id="view_otp_sms_account_tree" model="ir.ui.view">
+        <field name="name">otp.sms.account.tree</field>
+        <field name="model">otp.sms.account</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="api_key"/>
+                <field name="screct_key"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_otp_sms_account_form" model="ir.ui.view">
+        <field name="name">otp.sms.account.form</field>
+        <field name="model">otp.sms.account</field>
+        <field name="arch" type="xml">
+            <form string="OTP SMS Account">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="api_key"/>
+                        <field name="screct_key"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

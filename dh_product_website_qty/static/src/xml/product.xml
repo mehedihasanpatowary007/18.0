@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t  t-inherit="sale.Product" t-inherit-mode="extension">
+        <xpath expr="//td[hasclass('o_sale_product_configurator_qty')]//t//QuantityButtons" position="replace">
+            <t t-log="this.props.quantity"/>
+            <t t-if="this.props.display_product_qty_limits">
+                <QuantityButtons
+                    quantity="this.props.quantity"
+                    setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
+                    isMinusButtonDisabled="this.props.quantity === this.props.minimum_product_quantity &amp;&amp; isMainProduct"
+                    isPlusButtonDisabled="this.props.quantity === this.props.maximum_product_quantity &amp;&amp; isMainProduct"
+                    display_product_qty_limits = "this.props.display_product_qty_limits"
+                    minimum_product_quantity = "this.props.minimum_product_quantity"
+                    maximum_product_quantity = "this.props.maximum_product_quantity"
+                    product_quantity_multipler = "this.props.product_quantity_multipler"
+                />
+            </t>
+            <t t-else="">
+                <QuantityButtons
+                        quantity="this.props.quantity"
+                        setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
+                        isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                        display_product_qty_limits = "this.props.display_product_qty_limits"
+                        minimum_product_quantity = "this.props.minimum_product_quantity"
+                        maximum_product_quantity = "this.props.maximum_product_quantity"
+                        product_quantity_multipler = "this.props.product_quantity_multipler"
+                    />
+            </t>
+        </xpath>
+    </t>
+</templates>

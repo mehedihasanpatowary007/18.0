@@ -1,0 +1,54 @@
+<odoo>
+  <data>
+
+   <record id="view_form_sms_account" model="ir.ui.view">
+    <field name="name">betopia.sms.account.view.form</field>
+    <field name="model">betopia.sms.account</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="SMS Account">
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="gateway_id" string="Select Gateway" options="{'no_create':True}" />
+                    <field name="api_end_point" string="Gateway API"/>
+                    <field name="api_key"/>
+                    <field name="api_secret_key" string ="Secret Key"/>
+                </group>
+
+
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+  <record id="action_sms_account" model="ir.actions.act_window">
+    <field name="name">SMS Accounts</field>
+    <field name="res_model">betopia.sms.account</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+<!-- Tree view -->
+  <record id="view_tree_sms_account" model="ir.ui.view">
+      <field name="name">betopia.sms.account.view.tree</field>
+      <field name="model">betopia.sms.account</field>
+      <field name="type">list</field>
+      <field name="arch" type="xml">
+          <list string="SMS Accounts">
+              <field name="name"/>
+          </list>
+      </field>
+  </record>
+
+  <!-- Attach the menuitem to root -->
+
+
+
+
+
+
+
+  </data>
+</odoo>
