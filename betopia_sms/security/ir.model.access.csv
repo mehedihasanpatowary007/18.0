@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_betopia_sms_account,betopia.sms.account,model_betopia_sms_account,base.group_user,1,1,1,1
-access_betopia_sms_template,betopia.sms.template,model_betopia_sms_template,base.group_user,1,1,1,1
-access_betopia_sms_message,betopia.sms.message,model_betopia_sms_message,base.group_user,1,1,1,1
-access_betopia_sms_gateway,betopia.sms.gateway,model_betopia_sms_gateway,base.group_user,1,1,1,1
-access_sms_builder,sms.builder,model_sms_builder,base.group_user,1,1,1,1

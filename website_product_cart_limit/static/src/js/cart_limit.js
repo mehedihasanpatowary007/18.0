@@ -14,6 +14,14 @@ wSaleUtils.showCartNotification = function (callService, props = {}, options = {
 };
 
 function removeCartLimitSuccessNotifications() {
+    if (!document.body.textContent.includes("Maximum Limit Reached")) {
+        return;
+    }
+    const successTexts = [
+        "Item(s) added to your cart",
+        "Added to your cart",
+        "View cart",
+    ];
     const wrapperSelector = [
         ".o_notification",
         ".toast",
@@ -24,7 +32,10 @@ function removeCartLimitSuccessNotifications() {
         "[role='alert']",
     ].join(", ");
     for (const element of document.querySelectorAll("body *")) {
-        if (!element.textContent.includes("Item(s) added to your cart")) {
+        if (
+            !successTexts.some((text) => element.textContent.includes(text)) ||
+            element.textContent.includes("Maximum Limit Reached")
+        ) {
             continue;
         }
         element.closest(wrapperSelector)?.remove();
@@ -42,12 +53,14 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     start() {
         this._boundCaptureLimitClick = this._onCaptureLimitClick.bind(this);
         this.el.addEventListener("click", this._boundCaptureLimitClick, true);
+        this._startNotificationCleanupObserver();
         this._super(...arguments);
         this._refreshProductQuantityState();
     },
 
     destroy() {
         this.el.removeEventListener("click", this._boundCaptureLimitClick, true);
+        this._notificationCleanupObserver?.disconnect();
         return this._super(...arguments);
     },
 
@@ -57,6 +70,15 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         if (message) {
             wSaleUtils.showWarning(message);
         }
+        setTimeout(removeCartLimitSuccessNotifications, 0);
+    },
+
+    // Theme/custom cart flows can render success and warning separately.
+    _startNotificationCleanupObserver() {
+        this._notificationCleanupObserver = new MutationObserver(() => {
+            removeCartLimitSuccessNotifications();
+        });
+        this._notificationCleanupObserver.observe(document.body, { childList: true, subtree: true });
     },
 
     // Show or hide the inline product-page limit message.
