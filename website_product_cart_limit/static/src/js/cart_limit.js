@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import "@website_sale/js/website_sale";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 const originalShowCartNotification = wSaleUtils.showCartNotification;
@@ -33,30 +30,6 @@ function removeCartLimitSuccessNotifications() {
         element.closest(wrapperSelector)?.remove();
     }
 }
-
-// Product grid quick-add uses this method, so block its success notification here.
-publicWidget.registry.WebsiteSale.include({
-    async _addToCartInPage(params) {
-        const data = await rpc("/shop/cart/update_json", {
-            ...params,
-            display: false,
-            force_create: true,
-        });
-        if (data.cart_quantity && data.cart_quantity !== parseInt($(".my_cart_quantity").text())) {
-            wSaleUtils.updateCartNavBar(data);
-        }
-
-        const warning = data.notification_info?.warning || "";
-        if (warning.includes("Maximum Limit Reached")) {
-            this.call("cartNotificationService", "add", _t("Warning"), { warning });
-            removeCartLimitSuccessNotifications();
-            return data;
-        }
-
-        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
-        return data;
-    },
-});
 
 publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     selector: ".oe_website_sale",
