@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import "@website_sale/js/website_sale";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 const originalShowCartNotification = wSaleUtils.showCartNotification;
@@ -12,6 +15,48 @@ wSaleUtils.showCartNotification = function (callService, props = {}, options = {
     }
     return originalShowCartNotification(callService, props, options);
 };
+
+function removeCartLimitSuccessNotifications() {
+    const wrapperSelector = [
+        ".o_notification",
+        ".toast",
+        ".modal",
+        ".popover",
+        ".card",
+        "[role='dialog']",
+        "[role='alert']",
+    ].join(", ");
+    for (const element of document.querySelectorAll("body *")) {
+        if (!element.textContent.includes("Item(s) added to your cart")) {
+            continue;
+        }
+        element.closest(wrapperSelector)?.remove();
+    }
+}
+
+// Product grid quick-add uses this method, so block its success notification here.
+publicWidget.registry.WebsiteSale.include({
+    async _addToCartInPage(params) {
+        const data = await rpc("/shop/cart/update_json", {
+            ...params,
+            display: false,
+            force_create: true,
+        });
+        if (data.cart_quantity && data.cart_quantity !== parseInt($(".my_cart_quantity").text())) {
+            wSaleUtils.updateCartNavBar(data);
+        }
+
+        const warning = data.notification_info?.warning || "";
+        if (warning.includes("Maximum Limit Reached")) {
+            this.call("cartNotificationService", "add", _t("Warning"), { warning });
+            removeCartLimitSuccessNotifications();
+            return data;
+        }
+
+        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
+        return data;
+    },
+});
 
 publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     selector: ".oe_website_sale",
@@ -164,25 +209,7 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
 
     // Remove the success widget when the add has already reached the max limit.
     _removeAddToCartSuccessNotification() {
-        const titleSelector = [
-            ".o_notification",
-            ".toast",
-            ".modal",
-            ".popover",
-            ".card",
-            "[role='dialog']",
-            "[role='alert']",
-        ].join(", ");
-        for (const element of document.querySelectorAll("body *")) {
-            if (!element.textContent.includes("Item(s) added to your cart")) {
-                continue;
-            }
-            const notification = element.closest(titleSelector);
-            if (notification) {
-                notification.remove();
-                return;
-            }
-        }
+        removeCartLimitSuccessNotifications();
     },
 
     _refreshProductQuantityState() {
