@@ -10,7 +10,13 @@ wSaleUtils.showCartNotification = function (callService, props = {}, options = {
     if (props.warning?.includes("Maximum Limit Reached")) {
         props = { ...props, lines: undefined };
     }
-    return originalShowCartNotification(callService, props, options);
+    const result = originalShowCartNotification(callService, props, options);
+    document.dispatchEvent(
+        new CustomEvent("o_wcl_cart_notification", {
+            detail: { rejected: Boolean(props.warning?.includes("Maximum Limit Reached")) },
+        })
+    );
+    return result;
 };
 
 function removeCartLimitSuccessNotifications() {
@@ -47,12 +53,15 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
     events: {
         "click .o_wcl_limit_reached": "_onClickLimitReached",
         "click .css_quantity a": "_onClickProductQuantityButton",
+        "input input[name='add_qty']": "_onChangeProductQuantity",
         "change input[name='add_qty']": "_onChangeProductQuantity",
     },
 
     start() {
         this._boundCaptureLimitClick = this._onCaptureLimitClick.bind(this);
+        this._boundCartNotification = this._onCartNotification.bind(this);
         this.el.addEventListener("click", this._boundCaptureLimitClick, true);
+        document.addEventListener("o_wcl_cart_notification", this._boundCartNotification);
         this._startNotificationCleanupObserver();
         this._super(...arguments);
         this._refreshProductQuantityState();
@@ -60,6 +69,7 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
 
     destroy() {
         this.el.removeEventListener("click", this._boundCaptureLimitClick, true);
+        document.removeEventListener("o_wcl_cart_notification", this._boundCartNotification);
         this._notificationCleanupObserver?.disconnect();
         return this._super(...arguments);
     },
@@ -162,7 +172,7 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         }
 
         const addQty = this._getProductAddQty();
-        this._scheduleProductAddRecord(addQty);
+        this._pendingProductCartQty = Math.min(this._getProductCartQty() + addQty, this._getProductLimit());
     },
 
     _shouldBlockProductAdd() {
@@ -180,12 +190,13 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         return parseInt(quantityInput?.value || "1", 10) || 1;
     },
 
-    // Odoo updates cart widgets asynchronously, so refresh more than once.
-    _scheduleProductAddRecord(addQty) {
-        const limit = this._getProductLimit();
-        const targetQty = Math.min(this._getProductCartQty() + addQty, limit);
-        for (const delay of [0, 100, 350, 800]) {
-            setTimeout(() => this._recordProductAdd(targetQty), delay);
+    // Variant selection makes Odoo's add-to-cart flow asynchronous. Update our
+    // local state only after Odoo has read add_qty and confirmed the cart result.
+    _onCartNotification(ev) {
+        const targetQty = this._pendingProductCartQty;
+        this._pendingProductCartQty = null;
+        if (targetQty && !ev.detail?.rejected) {
+            this._recordProductAdd(targetQty);
         }
     },
 
@@ -196,6 +207,10 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
             return;
         }
         this._setProductCartQty(targetQty);
+        const quantityInput = this._getProductQuantityInput();
+        if (quantityInput) {
+            quantityInput.value = 1;
+        }
         this._refreshProductQuantityState();
         if (this._getProductCartQty() >= limit) {
             this._removeAddToCartSuccessNotification();
@@ -275,9 +290,16 @@ publicWidget.registry.WebsiteProductCartLimit = publicWidget.Widget.extend({
         const limit = this._getProductLimit();
         const remainingQty = Math.max(limit - this._getProductCartQty(), 0);
         const quantityInput = this._getProductQuantityInput();
-        if (limit && quantityInput && remainingQty && parseInt(quantityInput.value || "1", 10) > remainingQty) {
-            quantityInput.value = remainingQty;
-            this._showWarning(this._getProductWarning(limit));
+        if (limit && quantityInput && remainingQty) {
+            const quantity = parseInt(quantityInput.value || "0", 10) || 0;
+            if (quantity > remainingQty) {
+                quantityInput.value = remainingQty;
+            }
+            if (quantity >= remainingQty) {
+                this._showWarning(this._getProductWarning(limit));
+            } else {
+                this._clearLimitWarning();
+            }
         }
         this._refreshProductQuantityState();
     },
