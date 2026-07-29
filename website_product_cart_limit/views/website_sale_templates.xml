@@ -31,7 +31,7 @@
         </xpath>
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="after">
             <div
-                t-if="line.product_id.product_tmpl_id.website_max_cart_qty and line.product_uom_qty &gt;= line.product_id.product_tmpl_id.website_max_cart_qty"
+                t-if="line._website_cart_limit_reached()"
                 class="o_wcl_line_warning alert alert-danger py-1 px-2 mt-1 mb-0"
                 role="alert">
                 <i class="fa fa-ban me-1"/>
